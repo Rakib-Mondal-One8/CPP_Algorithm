@@ -1,43 +1,135 @@
+// #include <bits/stdc++.h>
+// using namespace std;
+// pair<int, int> path[1001][1001];
+// bool vis[1001][1001];
+// vector<pair<int, int>> moves = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+// int n, m;   // row ,col
+// int si, sj; // source
+// int ei, ej; // destination
+// bool valid(int x, int y)
+// {
+//     return ((!vis[x][y]) && (x >= 0) && (x < n) && (y >= 0) && (y < m));
+// }
+// void bfs()
+// {
+//     queue<pair<int, int>> q;
+//     q.push({si, sj});
+//     vis[si][sj] = true;
+
+//     while (!q.empty())
+//     {
+//         pair<int, int> p = q.front();
+//         q.pop();
+//         int xi = p.first;
+//         int yj = p.second;
+
+//         for (pair<int, int> c : moves)
+//         {
+//             int ci = xi + c.first;
+//             int cj = yj + c.second;
+
+//             if (valid(ci, cj))
+//             {
+//                 q.push({ci, cj});
+//                 vis[ci][cj] = true;
+//                 path[ci][cj] = {c.first, c.second};
+//             }
+//         }
+//     }
+// }
+// int main()
+// {
+//     cin >> n >> m;
+//     for (int i = 0; i < n; i++)
+//     {
+//         for (int j = 0; j < m; j++)
+//         {
+//             char c;
+//             cin >> c;
+//             if (c == '#')
+//                 vis[i][j] = true;
+//             if (c == 'A')
+//             {
+//                 si = i;
+//                 sj = j;
+//             }
+//             if (c == 'B')
+//             {
+//                 ei = i;
+//                 ej = j;
+//             }
+//             path[i][j] = {-1, -1};
+//         }
+//     }
+//     bfs();
+//     if (vis[ei][ej])
+//         cout << "YES" << endl;
+//     else
+//     {
+//         cout << "NO" << endl;
+//         return 0;
+//     }
+//     vector<pair<int, int>> ans;
+//     pair<int, int> des = {ei, ej};
+//     while (des.first != si || des.second != sj)
+//     {
+//         ans.push_back(path[des.first][des.second]);
+//         des.first -= ans.back().first;
+//         des.second -= ans.back().second;
+//     }
+//     reverse(ans.begin(), ans.end());
+//     cout << ans.size() << endl;
+//     for (auto p : ans)
+//     {
+//         if (p.first == 0 && p.second == -1)
+//             cout << "L";
+//         if (p.first == 0 && p.second == 1)
+//             cout << "R";
+//         if (p.first == 1 && p.second == 0)
+//             cout << "D";
+//         if (p.first == -1 && p.second == 0)
+//             cout << "U";
+//     }
+//     return 0;
+// }
+
 #include <bits/stdc++.h>
 using namespace std;
-const int N = 1001;
-int grid[N][N];
-bool vis[N][N];
+pair<int, int> path[1001][1001];
+bool vis[1001][1001];
+vector<pair<int, int>> moves = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 int n, m;
-int cnt = 0;
-vector<pair<int,int>> moves = {{0,-1},{0,1},{-1,0},{1,0}};
-bool valid(int i,int j)
+int si, sj;
+int ei, ej;
+bool valid(int x, int y)
 {
-    if(i<0 || i>=n || j<0 || j>=m || vis[i][j] == true || grid[i][j] == -1) return false;
-    return true;
+    return ((!vis[x][y]) && (x >= 0) && (x < n) && (y >= 0) && (y < m));
 }
-vector<char> path;
-void bfs(int fi,int fj)
+void bfs()
 {
-    queue<pair<int,int>> q;
-    q.push({fi,fj});
-    vis[fi][fj] = true;
+    queue<pair<int, int>> q;
+    q.push({si, sj});
 
-    while(!q.empty())
+    vis[si][sj] = true;
+
+    while (!q.empty())
     {
-        pair<int,int> pr = q.front();
+        pair<int, int> p = q.front();
         q.pop();
-        int si = pr.first;
-        int sj = pr.second;
-        if(grid[si][sj] == 2) return;
-        for(int i=0;i<4;i++)
+
+        int xi = p.first;
+        int yj = p.second;
+        for (auto ed : moves)
         {
-            int ci = si + moves[i].first;
-            int cj = sj + moves[i].second;
-            if(valid(ci,cj))
+            int ci = xi + ed.first;
+            int cj = yj + ed.second;
+
+            if (valid(ci, cj))
             {
-                if(i == 0) path.push_back('L');
-                else if(i==1) path.push_back('R');
-                else if(i==2) path.push_back('U');
-                else path.push_back('D');
-                q.push({ci,cj});
+                q.push({ci, cj});
                 vis[ci][cj] = true;
-                cnt++;
+
+                path[ci][cj] = {ed.first, ed.second};
             }
         }
     }
@@ -45,45 +137,58 @@ void bfs(int fi,int fj)
 int main()
 {
     cin >> n >> m;
-    int x, y;
-    int dx,dy;
+
     for (int i = 0; i < n; i++)
     {
-        string s;
-        cin >> s;
         for (int j = 0; j < m; j++)
         {
-            if (s[j] == 'A')
-            {
-                grid[i][j] = 1;
-                x = i;
-                y = j;
-            }
-            if (s[j] == 'B')
-            {
-                grid[i][j] = 2;
-                dx = i;
-                dy = j;
-            }
-            if (s[j] == '#')
-            {
-                grid[i][j] = -1;
-            }
-            if (s[j] == '.')
-                grid[i][j] = 0;
-        }
-    }
-    bfs(x,y);
-    if(vis[dx][dy] == true)
-    {
-        cout<<"YES"<<endl;
-        cout<<cnt<<endl;
-        for(char p : path)
-        {
-            cout<<p;
-        }
+            char c;
+            cin >> c;
 
+            if (c == '#')
+                vis[i][j] = true;
+            if (c == 'A')
+            {
+                si = i;
+                sj = j;
+            }
+            if (c == 'B')
+            {
+                ei = i;
+                ej = j;
+            }
+            path[i][j] = {-1, -1};
+        }
     }
+    bfs();
+    if (vis[ei][ej])
+    {
+        cout << "YES" << endl;
+        vector<pair<int, int>> ans;
+        // pair<int, int> des = {ei, ej};
+        while (ei != si || ej != sj)
+        {
+            ans.push_back(path[ei][ej]);
+            ei -= ans.back().first;
+            ej -= ans.back().second;
+        }
+        reverse(ans.begin(), ans.end());
+        cout << ans.size() << endl;
+
+        for (auto i : ans)
+        {
+            if (i.first == 0 && i.second == -1)
+                cout << "L";
+            if (i.first == 0 && i.second == 1)
+                cout << "R";
+            if (i.first == 1 && i.second == 0)
+                cout << "D";
+            if (i.first == -1 && i.second == 0)
+                cout << "U";
+        }
+    }
+    else
+        cout << "NO" << endl;
 
     return 0;
 }
