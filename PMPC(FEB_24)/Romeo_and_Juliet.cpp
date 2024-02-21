@@ -34,31 +34,62 @@ Sample Output 0
 YES
 */
 
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-const int N = 1e5+5;
+const int N = 1e5 + 5;
 vector<int> adj[N];
 bool visit[N];
-void bfs()
+int dis[N];
+void bfs(int x)
 {
-    
+    queue<int> q;
+    q.push(x);
+    visit[x] = true;
+    dis[x] = 0; // parent of root is -1 [root is x
+    while (!q.empty())
+    {
+        int nde = q.front();
+        q.pop();
+
+        for (int child : adj[nde])
+        {
+            if (!visit[child])
+            {
+                visit[child] = true;
+                dis[child] = dis[nde]+1;
+                q.push(child);
+            }
+        }
+    }
 }
 int main()
 {
-    int n,e;
-    cin>>n>>e;
+    int n, e;
+    cin >> n >> e;
 
-    while(e--)
+    while (e--)
     {
-        int v,u;
-        cin>>v>>u;
+        int v, u;
+        cin >> v >> u;
 
         adj[v].push_back(u);
         adj[u].push_back(v);
     }
-    int x,y,k;
-    cin>>x>>y>>k;
+    memset(visit, false, sizeof(visit));
+    memset(dis,-1,sizeof(dis));
+    int x, y, k;
+    cin >> x >> y >> k;
 
+    bfs(x);
 
+    if (dis[y] != -1 && dis[y]<= k*2)
+    {   cout << "YES" << endl;
+        // cout<<dis[y];
+    }
+    else
+    {
+        cout << "NO" << endl;
+        // cout<<dis[y];
+    }
     return 0;
 }

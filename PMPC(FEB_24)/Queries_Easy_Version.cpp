@@ -5,7 +5,7 @@ int main()
 {
     int Q;
     cin >> Q;
-    vector<int> v;
+    vector<int> v ;
     while (Q--)
     {
         int c, x;
