@@ -52,8 +52,8 @@ void merge_sort(int a[],int l,int r)
     if(l<r)
     {
         int mid = (l+r)/2;
-        merge_sort(a,l,mid);
-        merge_sort(a,mid+1,r);
+        merge_sort(a,l,mid); // I will tell the recursion divide tha half with sorting
+        merge_sort(a, mid + 1, r); // I will tell the recursion divide tha half with sorting
 
         merge(a,l,mid,r);
     }
